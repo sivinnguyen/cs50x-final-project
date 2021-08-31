@@ -11,6 +11,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
         socket.send("[client] hi there!")
     }
 
+    socket.onclose = function (e) {
+        console.log(e)
+        console.log("[close] Disconnected")
+    }
+
+    socket.onerror = function (e) {
+        console.log(e)
+    }
+
     socket.onmessage = function (message) {
         console.log(message.data)
     }
