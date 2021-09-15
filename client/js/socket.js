@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     // https://stackoverflow.com/questions/4812686/closing-websocket-correctly-html5-javascript
     window.addEventListener('unload', function(e) {
         if(socket.readyState == WebSocket.OPEN) {
-            socket.close()
+            socket.close(1001)
         }
     })
 })
