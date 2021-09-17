@@ -9,6 +9,8 @@ import path from "path"
 import ip from "ip"
 import qrcode from "qrcode-terminal"
 
+import mouse from "./mouse.js"
+
 const server = fastify({ logger: false })
 
 
@@ -34,9 +36,14 @@ server.register(fastifySocket)
 server.get('/ws', { websocket: true }, (connection, req) => {
     server._limitClients(req, connection.socket)
 
-    connection.socket.on('message', message => {
+    connection.socket.on('message', async message => {
         if (message) {
-            console.log(message.toString())
+            var data = JSON.parse(message)
+            console.log(data) // remove later
+
+            if(data.type == 'mouse') {
+                mouse.sHandleMouse(data.cmd, data.body)
+            }
         }
     })
 

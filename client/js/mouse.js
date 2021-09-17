@@ -34,6 +34,26 @@ const curMove = (pos, delta) => {
 }
 
 
+// Mouse controller
+const mouse = {
+    type: 'mouse',
+    cmd: null,
+    body: {
+        delta: {
+            x: null,
+            y: null
+        }
+    },
+}
+
+const handleMouse = (command, delta) => {
+    mouse.cmd = command
+    mouse.body.delta = delta
+
+    socket.send(JSON.stringify(mouse))
+}
+
+
 // Create an instance of Hammer
 const mc = new Hammer.Manager(touchpad, {
     recognizers: [
@@ -49,12 +69,13 @@ mc.on('panstart panend panmove', (e) => {
 // Handle pan event
 const handlePan = (e) => {
     if(e.type == 'panstart') {
-        console.log(e)
         handleCur(e.center, null, 'start')
+        handleMouse(e.type, {x: 0, y: 0})
     }
 
     if(e.type == 'panend') {
         handleCur(null, null, 'end')
+        //handleMouse(e.type, {x: 0, y: 0})
     }
 
     if(e.type == 'panmove') {
@@ -63,5 +84,6 @@ const handlePan = (e) => {
             y: e.deltaY
         }
         handleCur(e.center, delta, 'move')
+        handleMouse(e.type, delta)
     }
 }
