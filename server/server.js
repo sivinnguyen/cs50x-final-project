@@ -33,8 +33,8 @@ server.register(fastifySocket)
 
 
 // Declare websocket server
-server.get('/ws', { websocket: true }, (connection, req) => {
-    server._limitClients(req, connection.socket)
+server.get('/ws', { websocket: true }, async (connection, req) => {
+    await server._limitClients(req, connection.socket)
 
     connection.socket.on('message', async message => {
         if (message) {
@@ -42,7 +42,7 @@ server.get('/ws', { websocket: true }, (connection, req) => {
             console.log(data) // remove later
 
             if(data.type == 'mouse') {
-                mouse.sHandleMouse(data.cmd, data.body)
+                await mouse.sHandleMouse(data.cmd, data.body)
             }
         }
     })

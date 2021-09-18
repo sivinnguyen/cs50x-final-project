@@ -5,7 +5,11 @@ const touchpad = document.getElementById('touchpad')
 const cursor = document.getElementById('cursor')
 
 
-// Cursor controller
+/** 
+ * Cursor controller
+ **/
+
+// Handle cursor
 const handleCur = (pos, delta, action) => {
     
     if(action == 'start') {
@@ -21,6 +25,7 @@ const handleCur = (pos, delta, action) => {
     }
 }
 
+// Cursor movement
 const curMove = (pos, delta) => {
     var d = Math.min(20, Math.sqrt(delta.x * delta.x + delta.y * delta.y)) / 400,
         r = (180 * Math.atan2(delta.y, delta.x)) / Math.PI
@@ -34,7 +39,11 @@ const curMove = (pos, delta) => {
 }
 
 
-// Mouse controller
+/** 
+ * Mouse controller
+ **/
+
+// Declare mouse properties
 const mouse = {
     type: 'mouse',
     cmd: null,
@@ -46,18 +55,24 @@ const mouse = {
     },
 }
 
-const handleMouse = (command, delta) => {
+
+// Handle mouse
+const handleMouse = async (command, delta) => {
     mouse.cmd = command
     mouse.body.delta = delta
 
-    socket.send(JSON.stringify(mouse))
+    await socket.send(JSON.stringify(mouse))
 }
 
+
+/** 
+ * Hammer setting
+ **/
 
 // Create an instance of Hammer
 const mc = new Hammer.Manager(touchpad, {
     recognizers: [
-        [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 0}]
+        [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 10}]
     ]
 })
 
@@ -67,14 +82,14 @@ mc.on('panstart panend panmove', (e) => {
 })
 
 // Handle pan event
-const handlePan = (e) => {
+const handlePan = async (e) => {
     if(e.type == 'panstart') {
         handleCur(e.center, null, 'start')
-        handleMouse(e.type, {x: 0, y: 0})
+        await handleMouse(e.type, {x: 0, y: 0})
     }
 
     if(e.type == 'panend') {
-        handleCur(null, null, 'end')
+        await handleCur(null, null, 'end')
         //handleMouse(e.type, {x: 0, y: 0})
     }
 
@@ -84,6 +99,6 @@ const handlePan = (e) => {
             y: e.deltaY
         }
         handleCur(e.center, delta, 'move')
-        handleMouse(e.type, delta)
+        await handleMouse(e.type, delta)
     }
 }
