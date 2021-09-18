@@ -23,6 +23,11 @@ const handleCur = (pos, delta, action) => {
     if(action == 'move') {
         curMove(pos, delta)
     }
+
+    if(action == 'leftclick') {
+        gsap.set('.cursor', {x: pos.x, y: pos.y, display: "block"})
+        gsap.to('.cursor', {duration: 0.5, display: "none"});
+    }
 }
 
 // Cursor movement
@@ -57,11 +62,11 @@ const mouse = {
 
 
 // Handle mouse
-const handleMouse = async (command, delta) => {
+const handleMouse = (command, delta) => {
     mouse.cmd = command
     mouse.body.delta = delta
 
-    await socket.send(JSON.stringify(mouse))
+    socket.send(JSON.stringify(mouse))
 }
 
 
@@ -72,7 +77,8 @@ const handleMouse = async (command, delta) => {
 // Create an instance of Hammer
 const mc = new Hammer.Manager(touchpad, {
     recognizers: [
-        [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 10}]
+        [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 10}],
+        [Hammer.Tap, {event: 'leftclick', pointers: 1, tap: 1}]
     ]
 })
 
@@ -81,16 +87,19 @@ mc.on('panstart panend panmove', (e) => {
     handlePan(e)
 })
 
+mc.on('leftclick', (e) => {
+    console.log(e)
+    handleClick(e)
+})
+
 // Handle pan event
-const handlePan = async (e) => {
+const handlePan = (e) => {
     if(e.type == 'panstart') {
         handleCur(e.center, null, 'start')
-        await handleMouse(e.type, {x: 0, y: 0})
     }
 
     if(e.type == 'panend') {
-        await handleCur(null, null, 'end')
-        //handleMouse(e.type, {x: 0, y: 0})
+        handleCur(null, null, 'end')
     }
 
     if(e.type == 'panmove') {
@@ -99,6 +108,14 @@ const handlePan = async (e) => {
             y: e.deltaY
         }
         handleCur(e.center, delta, 'move')
-        await handleMouse(e.type, delta)
+        handleMouse(e.type, delta)
+    }
+}
+
+// Handle click events
+const handleClick = (e) => {
+    if(e.type == 'leftclick') {
+        handleCur(e.center, null, 'leftclick')
+        handleMouse(e.type, {x: 0, y: 0})
     }
 }

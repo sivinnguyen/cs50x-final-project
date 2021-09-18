@@ -13,10 +13,7 @@ Mouse.config.mouseSpeed = 5000
 const mouse = {
     screen: null,
     pos: null,
-    adjustment: {
-        x: 10,
-        y: 10
-    },
+    adjustment: null,
     // get mouse position
     getPos: async function () {
         await Mouse.getPosition().then(point => this.pos = point)
@@ -24,15 +21,14 @@ const mouse = {
     },
     // move mouse like human do
     move: async function (body) {
+        // get current mouse postion
+        await this.getPos()
         
         var x = this.pos.x + body.delta.x,
             y = this.pos.y + body.delta.y
 
         const point = new Point(x, y)
         await Mouse.move(straightTo(point))
-
-        // get current mouse postion again
-        await this.getPos()
     },
     // handle mouse actions
     sHandleMouse: async function (cmd, body) {
@@ -42,6 +38,10 @@ const mouse = {
 
         if(cmd == 'panmove') {
             await this.move(body)
+        }
+
+        if(cmd == 'leftclick') {
+            await Mouse.leftClick()
         }
     }
 }

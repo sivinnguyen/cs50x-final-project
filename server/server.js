@@ -33,16 +33,16 @@ server.register(fastifySocket)
 
 
 // Declare websocket server
-server.get('/ws', { websocket: true }, async (connection, req) => {
-    await server._limitClients(req, connection.socket)
+server.get('/ws', { websocket: true }, (connection, req) => {
+    server._limitClients(req, connection.socket)
 
-    connection.socket.on('message', async message => {
+    connection.socket.on('message', message => {
         if (message) {
             var data = JSON.parse(message)
             console.log(data) // remove later
 
             if(data.type == 'mouse') {
-                await mouse.sHandleMouse(data.cmd, data.body)
+                mouse.sHandleMouse(data.cmd, data.body)
             }
         }
     })
