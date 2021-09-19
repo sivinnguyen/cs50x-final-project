@@ -4,16 +4,19 @@
 
 'use strict'
 
-import { mouse as Mouse, Point, straightTo } from '@nut-tree/nut-js'
+import { mouse as Mouse, Point, straightTo, Button } from '@nut-tree/nut-js'
 
 // Setting mouse speed (pixel/sec)
 Mouse.config.mouseSpeed = 5000
+// Configures the delay between mouse clicks and / or scrolls.
+Mouse.config.autoDelayMs = 0
 
 // Mouse object
 const mouse = {
     screen: null,
     pos: null,
     adjustment: null,
+    isGrab: false,
     // get mouse position
     getPos: async function () {
         await Mouse.getPosition().then(point => this.pos = point)
@@ -30,6 +33,16 @@ const mouse = {
         const point = new Point(x, y)
         await Mouse.move(straightTo(point))
     },
+    // grab object
+    grab: async function () {
+        if(this.isGrab == false) {
+            await Mouse.pressButton(Button.LEFT)
+            this.isGrab = true
+        } else {
+            await Mouse.releaseButton(Button.LEFT)
+            this.isGrab = false
+        }
+    },
     // handle mouse actions
     sHandleMouse: async function (cmd, body) {
         if(cmd == 'panstart') {
@@ -42,6 +55,14 @@ const mouse = {
 
         if(cmd == 'leftclick') {
             await Mouse.leftClick()
+        }
+
+        if(cmd == 'rightclick') {
+            await Mouse.rightClick()
+        }
+
+        if(cmd == 'grab') {
+            await this.grab()
         }
     }
 }

@@ -78,7 +78,9 @@ const handleMouse = (command, delta) => {
 const mc = new Hammer.Manager(touchpad, {
     recognizers: [
         [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 10}],
-        [Hammer.Tap, {event: 'leftclick', pointers: 1, tap: 1}]
+        [Hammer.Tap, {event: 'leftclick', pointers: 1, taps: 1}],
+        [Hammer.Tap, {event: 'grab', pointers: 2, taps: 1}],
+        [Hammer.Press, {event: 'rightclick', pointers: 1, time: 1000}]
     ]
 })
 
@@ -87,7 +89,7 @@ mc.on('panstart panend panmove', (e) => {
     handlePan(e)
 })
 
-mc.on('leftclick', (e) => {
+mc.on('leftclick rightclick grab', (e) => {
     console.log(e)
     handleClick(e)
 })
@@ -114,8 +116,6 @@ const handlePan = (e) => {
 
 // Handle click events
 const handleClick = (e) => {
-    if(e.type == 'leftclick') {
-        handleCur(e.center, null, 'leftclick')
-        handleMouse(e.type, {x: 0, y: 0})
-    }
+    handleCur(e.center, null, e.type)
+    handleMouse(e.type, null)
 }
