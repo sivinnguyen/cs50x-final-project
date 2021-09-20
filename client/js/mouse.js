@@ -2,6 +2,8 @@
 
 // Get a reference to an element.
 const touchpad = document.getElementById('touchpad')
+const vscroll = document.getElementById('vscroll')
+const hscroll = document.getElementById('hscroll')
 
 /** 
  * Cursor controller
@@ -66,7 +68,7 @@ const handleMouse = (command, delta) => {
  * Hammer setting
  **/
 
-// Create an instance of Hammer
+// Create an mouse instance
 const mc = new Hammer.Manager(touchpad, {
     recognizers: [
         [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 5}],
@@ -111,3 +113,16 @@ const handleClick = (e) => {
     handleCur(e.center, e.type)
     handleMouse(e.type, null)
 }
+
+
+
+// Create an swiper instance
+const sw_v = new Hammer.Manager(vscroll, {
+    recognizers: [
+        [Hammer.Swipe],
+    ]
+})
+
+sw_v.on('swipeup swipedown', (e) => {
+    console.log(e)
+})
