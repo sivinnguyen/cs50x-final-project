@@ -2,45 +2,37 @@
 
 // Get a reference to an element.
 const touchpad = document.getElementById('touchpad')
-const cursor = document.getElementById('cursor')
-
 
 /** 
  * Cursor controller
  **/
 
 // Handle cursor
-const handleCur = (pos, delta, action) => {
+const handleCur = (pos, action) => {
     
     if(action == 'start') {
-        gsap.set('.cursor', {x: pos.x, y: pos.y, display: "block"});
+        gsap.set('.cursor', {x: pos.x, y: pos.y, opacity: 1});
     }
 
     if(action == 'end') {
-        gsap.set('.cursor', {display: "none"});
+        gsap.set('.cursor', {opacity: 0});
     }
 
     if(action == 'move') {
-        curMove(pos, delta)
+        gsap.set('.cursor', {x: pos.x, y: pos.y})
     }
 
-    if(action == 'leftclick') {
-        gsap.set('.cursor', {x: pos.x, y: pos.y, display: "block"})
-        gsap.to('.cursor', {duration: 0.5, display: "none"});
+    if(['leftclick', 'rightclick', 'grab'].includes(action)) {
+        gsap.set('.cursor', {
+            x: pos.x,
+            y: pos.y, 
+            scale: 2,
+            opacity: 1,
+            onComplete: function () {
+                gsap.to('.cursor', {duration: 0.5, opacity: 0, scale: 1})
+            }
+        })
     }
-}
-
-// Cursor movement
-const curMove = (pos, delta) => {
-    var d = Math.min(20, Math.sqrt(delta.x * delta.x + delta.y * delta.y)) / 400,
-        r = (180 * Math.atan2(delta.y, delta.x)) / Math.PI
-        
-    gsap.set('.cursor', {
-        x: pos.x,
-        y: pos.y,
-        scaleX: 1 + d,
-        rotation: r
-    })
 }
 
 
@@ -77,7 +69,7 @@ const handleMouse = (command, delta) => {
 // Create an instance of Hammer
 const mc = new Hammer.Manager(touchpad, {
     recognizers: [
-        [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 10}],
+        [Hammer.Pan, {direction: Hammer.DIRECTION_ALL, threshold: 5}],
         [Hammer.Tap, {event: 'leftclick', pointers: 1, taps: 1}],
         [Hammer.Tap, {event: 'grab', pointers: 2, taps: 1}],
         [Hammer.Press, {event: 'rightclick', pointers: 1, time: 1000}]
@@ -97,11 +89,11 @@ mc.on('leftclick rightclick grab', (e) => {
 // Handle pan event
 const handlePan = (e) => {
     if(e.type == 'panstart') {
-        handleCur(e.center, null, 'start')
+        handleCur(e.center, 'start')
     }
 
     if(e.type == 'panend') {
-        handleCur(null, null, 'end')
+        handleCur(null, 'end')
     }
 
     if(e.type == 'panmove') {
@@ -109,13 +101,13 @@ const handlePan = (e) => {
             x: e.deltaX,
             y: e.deltaY
         }
-        handleCur(e.center, delta, 'move')
+        handleCur(e.center, 'move')
         handleMouse(e.type, delta)
     }
 }
 
 // Handle click events
 const handleClick = (e) => {
-    handleCur(e.center, null, e.type)
+    handleCur(e.center, e.type)
     handleMouse(e.type, null)
 }

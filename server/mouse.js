@@ -55,6 +55,11 @@ const mouse = {
 
         if(cmd == 'leftclick') {
             await Mouse.leftClick()
+
+            if(this.isGrab == true) {
+                await Mouse.releaseButton(Button.LEFT)
+                this.isGrab = false
+            }
         }
 
         if(cmd == 'rightclick') {
