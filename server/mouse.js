@@ -69,6 +69,23 @@ const mouse = {
         if(cmd == 'grab') {
             await this.grab()
         }
+
+
+        if(cmd == 'swipeup' && body.scroll == 'vscroll') {
+            await Mouse.scrollUp(5)
+        }
+
+        if(cmd == 'swipedown' && body.scroll == 'vscroll') {
+            await Mouse.scrollDown(5)
+        }
+        
+        if(cmd == 'swipeup' && body.scroll == 'hscroll'){
+            await Mouse.scrollLeft(3)
+        }
+
+        if(cmd == 'swipedown' && body.scroll == 'hscroll'){
+            await Mouse.scrollRight(3)
+        }
     }
 }
 

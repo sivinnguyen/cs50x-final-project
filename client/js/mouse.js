@@ -76,7 +76,8 @@ const mouse = {
         delta: {
             x: null,
             y: null
-        }
+        },
+        scroll: null
     },
 }
 
@@ -85,6 +86,14 @@ const mouse = {
 const handleMouse = (command, delta) => {
     mouse.cmd = command
     mouse.body.delta = delta
+    mouse.body.scroll = null
+
+    socket.send(JSON.stringify(mouse))
+}
+
+const handleSroll = (command, direction = 'vscroll') => {
+    mouse.cmd = command
+    mouse.body.scroll = direction
 
     socket.send(JSON.stringify(mouse))
 }
@@ -140,7 +149,6 @@ const handleClick = (e) => {
 }
 
 
-
 // Create an swiper instance
 const sw_v = new Hammer.Manager(vscroll, {
     recognizers: [
@@ -157,9 +165,12 @@ const sw_h = new Hammer.Manager(hscroll, {
 sw_v.on('swipeup swipedown', (e) => {
     console.log(e)
     swipeEffect(e.type, '#vscroll')
+    handleSroll(e.type)
 })
 
 sw_h.on('swipeup swipedown', (e) => {
     console.log(e)
     swipeEffect(e.type, '#hscroll')
+    handleSroll(e.type, 'hscroll')
+    
 })
