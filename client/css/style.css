@@ -2,7 +2,7 @@ html {
     margin: 0;
     width: 100%;
     height: 100%;
-    background-color: #000;
+    background-color: #4d4dff;
 }
 
 body {
@@ -26,7 +26,7 @@ body {
 .swiper {
     overflow: hidden;
     height: 99vh;
-    background-color: #ffffff20;
+    background-color: #00000090;
     border-color: #000;
     border-style: solid;
     border-width: 0 9px 0 9px;
@@ -44,19 +44,13 @@ body {
     grid-column-end: 4;
 }
 
-#hscroll::after,
-#vscroll::after {
-    content: '';
+#hscroll .swiper__inner,
+#vscroll .swiper__inner {
     display: block;
     position: relative;
     height: 15vh;
     width: 100%;
-    top: -50%;
     left: 0;
-    background: linear-gradient(to bottom, #ff10f000 , #ff10f075, #ff10f0);
-    animation: drop 7s 0s infinite;
-    animation-fill-mode: forwards;
-    animation-timing-function: cubic-bezier(0.4, 0.26, 0, 0.97);
 }
 
 .cursor {
@@ -78,9 +72,4 @@ body {
     height: 100%;
     background-color: #ff10f0;
     border-radius: 50%;
-}
-
-@keyframes drop {
-  0% { top: -50%; }
-  100% { top: 110%; }
 }

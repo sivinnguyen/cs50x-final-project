@@ -39,6 +39,32 @@ const handleCur = (pos, action) => {
 
 
 /** 
+ * Swipe Effect
+ **/
+const swipeEffect = (action, el) => {
+    var dep = '110%',
+        des = '-10%',
+        gradient = 'top',
+        el = el + ' .swiper__inner'
+
+    if(action == 'swipedown') {
+        dep = '-10%'
+        des = '110%'
+        gradient = 'bottom'
+    }
+
+    gsap.fromTo(el, {
+        top: dep,
+        background: `linear-gradient(to ${gradient}, #ff10f000 , #ff10f075, #ff10f0)`
+    }, {
+        top: des,
+        duration: 1,
+        ease: 'ealastic.out()'
+    })
+}
+
+
+/** 
  * Mouse controller
  **/
 
@@ -84,7 +110,6 @@ mc.on('panstart panend panmove', (e) => {
 })
 
 mc.on('leftclick rightclick grab', (e) => {
-    console.log(e)
     handleClick(e)
 })
 
@@ -119,10 +144,22 @@ const handleClick = (e) => {
 // Create an swiper instance
 const sw_v = new Hammer.Manager(vscroll, {
     recognizers: [
-        [Hammer.Swipe],
+        [Hammer.Swipe]
+    ]
+})
+
+const sw_h = new Hammer.Manager(hscroll, {
+    recognizers: [
+        [Hammer.Swipe]
     ]
 })
 
 sw_v.on('swipeup swipedown', (e) => {
     console.log(e)
+    swipeEffect(e.type, '#vscroll')
+})
+
+sw_h.on('swipeup swipedown', (e) => {
+    console.log(e)
+    swipeEffect(e.type, '#hscroll')
 })
