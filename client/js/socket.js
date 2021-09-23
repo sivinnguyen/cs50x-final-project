@@ -15,6 +15,10 @@ socket.onclose = function (e) {
         console.log(e.reason)
     }
 
+    if(e.code == 4011) {
+        window.location.href = "./incompatible.html";
+    }
+
     if(e.code == 1006) {
         console.log('[server] shut down! ')
     }

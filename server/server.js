@@ -34,6 +34,10 @@ server.register(fastifySocket)
 
 // Declare websocket server
 server.get('/ws', { websocket: true }, (connection, req) => {
+    // Only allow connection from mobile device
+    server._checkUserAgent(req.headers['user-agent'], connection.socket)
+
+    // Limit connection
     server._limitClients(req, connection.socket)
 
     connection.socket.on('message', message => {
@@ -71,7 +75,25 @@ server.decorate('_limitClients', (req, socket, num = 1) => {
     }
     
     return
-}) 
+})
+
+/*
+ * Close connection when user not connect from mobile devices
+ * @param {string} useragent from request
+ * @return {void}
+ */
+server.decorate('_checkUserAgent', (useragent, socket) => {
+    var pattern = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i
+
+    console.log('user-agent', useragent)
+
+    if(!pattern.test(useragent)) {
+        console.log('Here!')
+        socket.close(4011, `[server] Device is not supported`)
+    }
+    
+    return
+})
 
 
 // Run the server !
