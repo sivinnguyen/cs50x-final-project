@@ -33,12 +33,14 @@ server.register(fastifySocket)
 
 
 // Declare websocket server
-server.get('/ws', { websocket: true }, (connection, req) => {
+server.get('/ws', { websocket: true }, async (connection, req) => {
+    console.log(`[${req.ip}] connected...`, server.websocketServer.clients.size)
+
     // Only allow connection from mobile device
-    server._checkUserAgent(req.headers['user-agent'], connection.socket)
+    await server._checkUserAgent(req, connection.socket)
 
     // Limit connection
-    server._limitClients(req, connection.socket)
+    await server._limitClients(req, connection.socket)
 
     connection.socket.on('message', message => {
         if (message) {
@@ -65,8 +67,6 @@ server.get('/ws', { websocket: true }, (connection, req) => {
  * @return {void}
  */
 server.decorate('_limitClients', (req, socket, num = 1) => {
-    console.log(`[${req.ip}] connected...`, server.websocketServer.clients.size)
-
     if (server.websocketServer.clients.size > num) {
         console.log(`[${req.ip}] denied...`)
         socket.close(4001, `[server] Only ${num} connection(s) per time!`)
@@ -82,13 +82,11 @@ server.decorate('_limitClients', (req, socket, num = 1) => {
  * @param {string} useragent from request
  * @return {void}
  */
-server.decorate('_checkUserAgent', (useragent, socket) => {
+server.decorate('_checkUserAgent', (req, socket) => {
     var pattern = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i
 
-    console.log('user-agent', useragent)
-
-    if(!pattern.test(useragent)) {
-        console.log('Here!')
+    if(!pattern.test(req.headers['user-agent'])) {
+        console.log(`[${req.ip}] denied...`)
         socket.close(4011, `[server] Device is not supported`)
     }
     
