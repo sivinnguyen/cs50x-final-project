@@ -69,7 +69,7 @@ server.get('/ws', { websocket: true }, async (connection, req) => {
 server.decorate('_limitClients', (req, socket, num = 1) => {
     if (server.websocketServer.clients.size > num) {
         console.log(`[${req.ip}] denied...`)
-        socket.close(4001, `[server] Only ${num} connection(s) per time!`)
+        socket.close(4001, `[server] only ${num} connection(s) per time!`)
     } else {
         socket.send('[server] Hi from server!')
     }

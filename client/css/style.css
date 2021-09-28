@@ -1,4 +1,5 @@
 html {
+    color: #a8ffef;
     margin: 0;
     width: 100%;
     height: 100%;
@@ -16,7 +17,7 @@ html {
 }
 
 #touchpad {
-    height: 100vh;
+    height: 99vh;
     background-color: #141322;
     grid-column-start: 2;
     grid-column-end: 3;
@@ -26,7 +27,7 @@ html {
 
 .swiper {
     overflow: hidden;
-    height: 100vh;
+    height: 99vh;
     background-color: #1d1e7d;
     border-color: #141322;
     border-style: solid;
@@ -73,4 +74,51 @@ html {
     height: 100%;
     background-color: #ff428e;
     border-radius: 50%;
+}
+
+#dialog {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    z-index: 1001;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #141322;
+}
+
+#dialog__message {
+    line-height: 1.8;
+    min-height: 10vh;
+    margin-top: 25vh;
+    padding: 0 20px 20px 20px;
+}
+
+.dialog__action-button {
+    padding: 10px 15px;
+    border: 2px solid;
+    border-radius: 10%;
+    text-decoration: none;
+}
+
+#button__reload {
+    color: #dff959;
+}
+
+#button__reload:active {
+    color: #141322;
+    border-color: #dff959;
+    background-color: #dff959;
+}
+
+#button__exit {
+    color: #ff428e;
+    margin-left: 15px;
+}
+
+#button__exit:active {
+    color: #141322;
+    border-color: #ff428e;;
+    background-color: #ff428e;;
 }
