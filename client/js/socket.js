@@ -2,11 +2,13 @@
 
 const origin = location.origin.replace('http', 'ws')
 const WS_URL = `${origin}/ws`
+const container = document.getElementById('container')
 
 const socket = new WebSocket(WS_URL)
 
 socket.onopen = function (e) {
     console.log('[open] Connection established!')
+    container.style.visibility = 'visible'
 }
 
 socket.onclose = function (e) {

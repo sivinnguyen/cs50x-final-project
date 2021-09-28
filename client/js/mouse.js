@@ -55,7 +55,7 @@ const swipeEffect = (action, el) => {
 
     gsap.fromTo(el, {
         top: dep,
-        background: `linear-gradient(to ${gradient}, #ff10f000 , #ff10f075, #ff10f0)`
+        background: `linear-gradient(to ${gradient}, #ff428e00 , #ff428e75, #ff428e)`
     }, {
         top: des,
         duration: 1,
