@@ -16,7 +16,7 @@ const server = fastify({ logger: false })
 
 // Set configurations
 server.decorate('_conf', {
-    port: 3000,
+    port: process.env.PORT || 3000,
     // resolve "__dirname is not defined in ES module scope" 
     // https://stackoverflow.com/a/68163774/1813901
     dirname: path.resolve()

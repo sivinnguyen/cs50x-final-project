@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "start": "PORT=$npm_config_port node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Sivin",
+  "author": "Sivin (Huy Vu~)",
   "license": "ISC",
   "dependencies": {
     "@nut-tree/nut-js": "^1.7.0",
