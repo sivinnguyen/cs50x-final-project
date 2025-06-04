@@ -3,6 +3,8 @@ A nodejs application turns your smartphone into a simple touchpad for the tempor
 
 **Demo URL:** https://www.youtube.com/watch?v=hnFxm_wQE0k
 
+## NutJS gave up on open source
+
 ## Installation
 
 ```bash
